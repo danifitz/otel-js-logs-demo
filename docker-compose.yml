@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: ./app
+    environment:
+      - OTEL_SERVICE_NAME=payment-processing-service
+      - OTEL_RESOURCE_ATTRIBUTES=deployment.environment=production,service.namespace=production,service.version=1.0,service.instance.id=demo_host
+      - OTEL_TRACES_EXPORTER=http/protobuf
+      - OTEL_METRICS_EXPORTER=http/protobuf
+      - OTEL_LOGS_EXPORTER=http/protobuf
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://grafana-alloy:4318
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://grafana-alloy:4318/v1/logs
+    depends_on:
+      - grafana-alloy
+  grafana-alloy:
+    build:
+      context: ./alloy
+    ports:
+      - "5006:12345" # Alloy UI port
+      - "4317:4317" # otlp grpc
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
