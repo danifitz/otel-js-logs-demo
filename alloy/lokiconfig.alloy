@@ -1,0 +1,20 @@
+otelcol.receiver.otlp "default" {
+    http {}
+    grpc {}
+
+    output {
+        logs    = [otelcol.processor.batch.default.input]
+    }
+}
+
+otelcol.processor.batch "default" {
+    output {
+        logs = [otelcol.exporter.otlphttp.default.input]
+    }
+}
+
+otelcol.exporter.otlphttp "default" {
+    client {
+        endpoint = "http://loki:3100/otlp"
+    }
+}
