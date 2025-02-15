@@ -32,6 +32,6 @@ const sdk = new opentelemetry.NodeSDK({
     ],
   })
   
-  sdk.start();
-  console.log('OpenTelemetry SDK initialized.');
-  module.export = sdk;
+sdk.start();
+console.log('OpenTelemetry SDK initialized.');
+module.export = sdk;
